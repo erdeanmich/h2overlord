@@ -7,6 +7,7 @@ RELAY_PIN = 16
 def toggle_pump_relay():
     relay = gpiozero.OutputDevice(RELAY_PIN)
     relay.toggle()
+    print('Relay status is: ' + relay.value)
 
 
 if __name__ == '__main__':

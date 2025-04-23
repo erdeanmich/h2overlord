@@ -11,7 +11,7 @@ def toggle_pump_relay():
 
 
 if __name__ == '__main__':
-    RELAY = gpiozero.OutputDevice(RELAY_PIN)
+    RELAY = gpiozero.OutputDevice(RELAY_PIN, active_high=False)
     print('Starting the test script!')
     while True:
         sleep(2)

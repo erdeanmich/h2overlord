@@ -1,6 +1,7 @@
 import Aurelia from 'aurelia';
-import { MyApp } from './my-app';
+import { RootComponent } from './root-component';
+
 
 Aurelia
-  .app(MyApp)
+  .app(RootComponent)
   .start();

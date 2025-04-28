@@ -11,3 +11,26 @@ h1 {
     width: 60%;
     margin: 50px auto;
 }
+
+button {
+    background-color: #1c637c;
+    border-style: none;
+    border-radius: 10px;
+    padding: 5px;
+    color: white;
+}
+
+button:disabled:hover, button:disabled {
+    background-color: #7b909a;
+    cursor: default;
+}
+
+button:hover {
+    background-color: #175367;
+    cursor: pointer;
+}
+
+button:active {
+    background-color: #134555;
+    cursor: pointer;
+}

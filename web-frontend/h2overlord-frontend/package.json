@@ -9,9 +9,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@aurelia/router": "latest",
-    "aurelia": "latest",
-    "cron-validate": "^1.5.2",
-    "cronstrue": "^2.59.0"
+    "aurelia": "latest"
   },
   "devDependencies": {
     "@aurelia/testing": "latest",

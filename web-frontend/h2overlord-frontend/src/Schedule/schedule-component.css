@@ -1,0 +1,9 @@
+.configure-container {
+    button {
+        margin-bottom: 5px;
+    }
+}
+
+.readable-schedule {
+    color: dimgray;
+}

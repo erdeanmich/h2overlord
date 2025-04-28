@@ -1,0 +1,13 @@
+section {
+    border-style: solid;
+    border-radius: 10px;
+    border-width: thin;
+    padding: 20px;
+    margin-bottom: 10px;
+
+    header {
+        text-align: right;
+        font-style: italic;
+        margin-bottom: 1em;
+    }
+}

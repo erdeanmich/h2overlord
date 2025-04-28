@@ -1,9 +1,15 @@
-<section class="statusboard">
-    <header>Status</header>
-    <div>
-       <ul>
-            <li>Temperature</li>
-            <li>Humidity</li>
-       </ul>
+<card-component title="Status" class="statusboard">
+    <div class="status-container" au-slot>
+        <div class="status-image status-card">
+            <header>${getPumpingText()}</header>
+            <div class="water-container ${isPumping? '' : ' water-container-disabled'}"></div>
+        </div>
+        <div class="status-data status-card">
+            <ul>
+                <li>Pump is: ${getEnabledText()}</li>
+                <li>Temperature: ${getFormattedTemperature()}</li>
+                <li>Humidity: ${getFormattedHumidity()}</li>
+            </ul>
+        </div>
     </div>
-</section>
+</card-component>

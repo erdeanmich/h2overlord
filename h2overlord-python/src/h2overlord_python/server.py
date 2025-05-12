@@ -1,11 +1,7 @@
-import json
-from wsgiref.simple_server import server_version
 
-from bottle import route, run, Bottle, request
-from numpy.ma.core import append, flatten_structured_array
+from bottle import route, run, Bottle, request, response
 from schedule import Scheduler
 
-from h2overlord_python.Data.pumpstate import PumpState
 from h2overlord_python.raspiservice import RaspiService
 from h2overlord_python.pumpservice import PumpService
 from src.h2overlord_python.Config.config import Config
@@ -30,5 +26,10 @@ class Server:
         self.bottle.route('/schedule', 'POST', self.server_router.schedule)
         self.bottle.route('/action/pump-running', 'POST', self.server_router.toggle_pump_running)
         self.bottle.route('/action/pump-enable', 'POST', self.server_router.toggle_enable_pump)
-    
+        self.bottle.add_hook('after_request', self.enable_cors)
+
+    def enable_cors(self):
+        response.headers['Access-Control-Allow-Origin'] = 'http://localhost:9000'
+        response.headers['Access-Control-Allow-Methods'] = 'PUT, GET, POST, DELETE, OPTIONS'
+        response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
         

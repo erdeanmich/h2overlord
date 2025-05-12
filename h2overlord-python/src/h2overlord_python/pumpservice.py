@@ -3,7 +3,7 @@ import re
 
 import pendulum
 import schedule
-from bottle import request, abort
+from bottle import request, abort, response
 from schedule import Scheduler
 
 from h2overlord_python.Config.config import Config
@@ -24,6 +24,10 @@ class PumpService:
         self.scheduler = scheduler
 
     def status(self):
+        print("Returning Status!")
+        response.content_type='application/json'
+        self.pump_state.temperature = self.raspi_service.get_temperature()
+        self.pump_state.humidity = self.raspi_service.get_humidity()
         return json.dumps(self.pump_state.__dict__)
 
     def schedule(self):

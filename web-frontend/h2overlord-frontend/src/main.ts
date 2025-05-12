@@ -1,4 +1,4 @@
-import Aurelia, {StyleConfiguration} from 'aurelia';
+import Aurelia, {DI, Registration, StyleConfiguration} from 'aurelia';
 import { RootComponent } from './root-component';
 import {StatusBoard} from "./Status/status-board";
 import {CardComponent} from "./Reusable/card-component";
@@ -12,3 +12,5 @@ Aurelia
     .register(ActionsComponent)
     .app(RootComponent)
     .start();
+
+const container = DI.createContainer();

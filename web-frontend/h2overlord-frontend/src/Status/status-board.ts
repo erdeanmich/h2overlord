@@ -1,9 +1,17 @@
+import { IEventAggregator, inject } from "aurelia";
+import { IHttpClientService } from "../Services/HttpClientService";
+import { StatusData } from "../Services/StatusData";
 
+@inject(IHttpClientService, IEventAggregator)
 export class StatusBoard {
     public isEnabled: boolean = false;
     public temperature: number = 20;
     public humidity: number = 0.8;
     public isPumping: boolean = false;
+
+    constructor(private httpClientService: IHttpClientService, private ea : IEventAggregator) {
+        ea.subscribe('status', this.OnStatusReceived)
+    }
 
     public getEnabledText(): string {
         return this.isEnabled ? "enabled" : "disabled"
@@ -19,5 +27,12 @@ export class StatusBoard {
 
     public getPumpingText(): string {
         return this.isPumping ? "Water is flowing" : "Water chills in the container"
+    }
+
+    private OnStatusReceived(statusData: StatusData) {
+        this.isEnabled = statusData.isEnabled;
+        this.isPumping = statusData.isRunning;
+        this.temperature = statusData.temperature;
+        this.humidity = statusData.humidity;
     }
 }

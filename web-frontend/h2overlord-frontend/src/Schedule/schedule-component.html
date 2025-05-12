@@ -1,13 +1,13 @@
 <card-component title="Schedule" class="scheduleboard">
     <h2>Current schedule</h2>
-    <div class="readable-schedule">Every day at ${schedule} for ${duration} minutes</div>
+    <div class="readable-schedule">${getFormattedSchedule(schedule, duration)}</div>
     <h2>Configure schedule</h2>
     <div class="configure-container">
         <input type="time" value.bind="newSchedule"/>
         <input type="number" value.bind="newDuration">
         <button id="button-configure" disabled>Configure new schedule!</button>
         <div class="readable-schedule">
-            Every day at ${newSchedule} for ${newDuration} minutes
+            ${getFormattedSchedule(newSchedule, newDuration)}
         </div>
     </div>
 

@@ -1,26 +1,35 @@
-import { bindable, IEventAggregator, inject } from "aurelia";
+import { batch, bindable, BindingMode, IEventAggregator, inject } from "aurelia";
 import { IHttpClientService } from "../Services/HttpClientService";
 import { StatusData } from "../Services/StatusData";
 
 @inject(IHttpClientService, IEventAggregator)
 export class ActionsComponent {
-    @bindable public isEnabled : boolean = false;
-    @bindable public isPumping : boolean = false;
+    @bindable({ mode: BindingMode.toView}) public isEnabled : boolean;
+    @bindable({ mode: BindingMode.toView}) public isPumping : boolean;
+
+    private isInitialUpdate: boolean = true;
 
     constructor(private httpClientService: IHttpClientService, private ea : IEventAggregator) {
-        ea.subscribe('status', this.OnStatusReceived)
+        ea.subscribe('status', (statusData: StatusData) => this.OnStatusReceived(statusData))
     }
 
     private OnStatusReceived(statusData: StatusData) {
-        this.isEnabled = statusData.isEnabled
-        this.isPumping = statusData.isRunning
+        this.isEnabled = statusData.isEnabled;
+        this.isPumping = statusData.isRunning;
+        this.isInitialUpdate = false;
     }
 
-    public isEnabledChanged(newVal: boolean, oldVal: boolean) {
+    public onToggleEnable() {
+        if(this.isInitialUpdate) {
+            return;
+        }
         this.httpClientService.enablePumpAction();
     }
 
-    public isPumpingChanged(newVal: boolean, oldVal: boolean) {
+    public onToggleRunning() {
+        if(this.isInitialUpdate) {
+            return;
+        }
         this.httpClientService.pumpRunningAction();
     }
 }

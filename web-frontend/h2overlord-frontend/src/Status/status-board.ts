@@ -1,32 +1,40 @@
-import { IEventAggregator, inject } from "aurelia";
+import { bindable, BindingMode, IEventAggregator, inject } from "aurelia";
 import { IHttpClientService } from "../Services/HttpClientService";
 import { StatusData } from "../Services/StatusData";
 
 @inject(IHttpClientService, IEventAggregator)
 export class StatusBoard {
-    public isEnabled: boolean = false;
-    public temperature: number = 20;
-    public humidity: number = 0.8;
-    public isPumping: boolean = false;
+    @bindable({mode: BindingMode.toView}) public enabledText: string
+    @bindable({mode: BindingMode.toView}) public temperatureText: string
+    @bindable({mode: BindingMode.toView}) public humidityText: string
+    @bindable({mode: BindingMode.toView}) public pumpingText: string
+    @bindable({mode: BindingMode.toView}) public isPumping: boolean = false;
+
+    private isEnabled: boolean = false;
+    private temperature: number = 20;
+    private humidity: number = 0.8;
 
     constructor(private httpClientService: IHttpClientService, private ea : IEventAggregator) {
-        ea.subscribe('status', this.OnStatusReceived)
+        ea.subscribe('status', (statusData: StatusData) => this.OnStatusReceived(statusData))
     }
 
-    public getEnabledText(): string {
-        return this.isEnabled ? "enabled" : "disabled"
+    private formatEnabled(): string {
+        let text = this.isEnabled ? "enabled" : "disabled";
+        return "Pump is: " + text;
     }
 
-    public getFormattedHumidity(): string {
-        return this.humidity * 100 + "%"
+    private formatHumidity(): string {
+        let text = this.humidity * 100 + "%";
+        return "Humidity: " + text;
     }
 
-    public getFormattedTemperature(): string {
-        return this.temperature + "°C"
+    private formatTemperature(): string {
+        let text = this.temperature + "°C";
+        return "Temperature: " + text;
     }
 
-    public getPumpingText(): string {
-        return this.isPumping ? "Water is flowing" : "Water chills in the container"
+    private formatPumping(): string {
+        return this.isPumping ? "Water is flowing" : "Water chills in the container";
     }
 
     private OnStatusReceived(statusData: StatusData) {
@@ -34,5 +42,10 @@ export class StatusBoard {
         this.isPumping = statusData.isRunning;
         this.temperature = statusData.temperature;
         this.humidity = statusData.humidity;
+
+        this.enabledText = this.formatEnabled();
+        this.humidityText = this.formatHumidity();
+        this.pumpingText = this.formatPumping();
+        this.temperatureText = this.formatTemperature();
     }
 }

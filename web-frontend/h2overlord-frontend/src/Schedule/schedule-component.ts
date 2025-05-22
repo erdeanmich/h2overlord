@@ -7,11 +7,11 @@ export class ScheduleComponent {
 
     public schedule: string = '18:00';
     public duration: number = 20;
-    @bindable public newSchedule: string = '';
-    @bindable public newDuration: number = 0;
+    @bindable({ mode: BindingMode.twoWay}) public newSchedule: string = '';
+    @bindable({ mode: BindingMode.twoWay}) public newDuration: number = 0;
 
     constructor(private httpClientService: IHttpClientService, private ea : IEventAggregator) {
-        ea.subscribe('status', this.OnStatusReceived)
+        ea.subscribe('status', (statusData: StatusData) => this.OnStatusReceived(statusData))
     }
 
     public isValidTime(timeText: string): boolean {

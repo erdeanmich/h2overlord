@@ -17,7 +17,6 @@ export class ActionsComponent {
     }
 
     public isEnabledChanged(newVal: boolean, oldVal: boolean) {
-        console.log('hey')
         this.httpClientService.enablePumpAction();
     }
 

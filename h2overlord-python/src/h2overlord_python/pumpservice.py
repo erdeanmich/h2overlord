@@ -5,33 +5,58 @@ import pendulum
 import schedule
 from bottle import request, abort, response
 from schedule import Scheduler
+from tinydb import TinyDB
+from tinydb.table import Document
 
 from h2overlord_python.Config.config import Config
 from h2overlord_python.Data.pumpstate import PumpState
-from h2overlord_python.raspiservice import RaspiService
+from h2overlord_python.raspiservice import RaspiService, InterfaceRaspiService
 
 
 class PumpService:
     config: Config
-    raspi_service: RaspiService
+    raspi_service: InterfaceRaspiService
     pump_state: PumpState
     scheduler: Scheduler
+    db: TinyDB = TinyDB('state.json')
 
-    def __init__(self, config: Config, raspi_handler: RaspiService, scheduler : Scheduler):
+    def __init__(self, config: Config, raspi_service: InterfaceRaspiService, scheduler : Scheduler):
         self.config = config
-        self.raspi_service = raspi_handler
-        self.pump_state = PumpState(False, False, 0, 0, '', 0)
+        self.raspi_service = raspi_service
+        self.pump_state = PumpState(
+            False, False, self.raspi_service.get_temperature(), self.raspi_service.get_humidity(), '', 0
+        )
+        if len(self.db.all()) == 0:
+            self.dump_state_to_db()
+        else:
+            self.fetch_state_from_db()
+
+        print(self.pump_state)
         self.scheduler = scheduler
+
+    def fetch_state_from_db(self):
+        db_state = self.db.get(doc_id=1)
+        self.pump_state.isEnabled = db_state['isEnabled']
+        self.pump_state.isRunning = db_state['isRunning']
+        self.pump_state.temperature = db_state['temperature']
+        self.pump_state.humidity = db_state['humidity']
+        self.pump_state.currentDuration = db_state['currentDuration']
+        self.pump_state.currentSchedule = db_state['currentSchedule']
+
+    def dump_state_to_db(self):
+        self.db.upsert(Document(self.pump_state.__dict__, doc_id=1))
 
     def status(self):
         print("Returning Status!")
         response.content_type='application/json'
+        self.fetch_state_from_db()
         self.pump_state.temperature = self.raspi_service.get_temperature()
         self.pump_state.humidity = self.raspi_service.get_humidity()
+        self.dump_state_to_db()
         return json.dumps(self.pump_state.__dict__)
 
     def schedule(self):
-        print(request.json)
+        self.fetch_state_from_db()
         time: str = request.json['time']
         duration: int = request.json['duration']
 
@@ -52,6 +77,7 @@ class PumpService:
         return self.status()
 
     def toggle_pump_running(self):
+        self.fetch_state_from_db()
         if self.pump_state.isEnabled:
             self.raspi_service.toggle_pump_relay()
             self.pump_state.isRunning = not self.pump_state.isRunning
@@ -59,6 +85,7 @@ class PumpService:
         return self.status()
 
     def toggle_enable_pump(self):
+        self.fetch_state_from_db()
         self.pump_state.isEnabled = not self.pump_state.isEnabled
         return self.status()
 

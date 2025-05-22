@@ -1,8 +1,9 @@
 
 from bottle import route, run, Bottle, request, response
 from schedule import Scheduler
+from tinydb import TinyDB
 
-from h2overlord_python.raspiservice import RaspiService
+from h2overlord_python.raspiservice import RaspiService, InterfaceRaspiService
 from h2overlord_python.pumpservice import PumpService
 from src.h2overlord_python.Config.config import Config
 
@@ -11,9 +12,10 @@ class Server:
     main_server : Bottle = Bottle()
     bottle : Bottle = Bottle()
 
-    def __init__(self, config: Config, raspi_handler: RaspiService, scheduler: Scheduler):
-        self.server_router = PumpService(config, raspi_handler, scheduler)
+    def __init__(self, config: Config, raspi_service: InterfaceRaspiService, scheduler: Scheduler):
+        self.server_router = PumpService(config, raspi_service, scheduler)
         self.config = config
+
 
     def start(self):
         print(f'Starting the server at base url {self.config.baseUrl}')

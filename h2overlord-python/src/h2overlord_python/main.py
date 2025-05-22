@@ -1,12 +1,43 @@
 import json
+import re
 import threading
 import time
+from pathlib import Path
 
 import schedule
 
 from h2overlord_python.Config.config import Config
-from h2overlord_python.raspiservice import RaspiService
+from h2overlord_python.raspiservice import RaspiService, MockRaspiService
 from h2overlord_python.server import Server
+
+def is_raspberry_pi() -> bool:
+    """
+    Return True when the program is running *on Raspberry-Pi hardware*.
+    """
+    # 1. The reliable modern way: read the Device-Tree model string
+    model_file = Path("/sys/firmware/devicetree/base/model")
+    try:
+        # The file is NUL-terminated; strip both NUL and newline.
+        model = model_file.read_bytes().decode().strip("\x00\n")
+        if model.startswith("Raspberry Pi"):
+            return True
+    except FileNotFoundError:
+        # Not a Linux with devicetree mounted (very old kernel or non-Linux OS)
+        pass
+
+    # 2. Fallback for very old kernels (< 4.7) : look at /proc/cpuinfo
+    try:
+        with open("/proc/cpuinfo", "r") as f:
+            for line in f:
+                if re.match(r"^Hardware\s*:\s*BCM", line):
+                    return True  # classic Pi 1/2/3
+                if "Raspberry Pi" in line:  # Pi 4 / CM4 expose the name here
+                    return True
+    except FileNotFoundError:
+        pass
+
+    # If none of the above matched we assume we are *not* on a Pi
+    return False
 
 def run_continuously(interval=1):
     """Continuously run, while executing pending jobs at each
@@ -38,7 +69,13 @@ if __name__ == '__main__':
     config = Config(**json.loads(open('./Config/config.json').read()))
     print(config)
     background_task = run_continuously(60)
-    server = Server(config, None, schedule.Scheduler())
+
+    if is_raspberry_pi():
+        raspi_service = RaspiService(config)
+    else:
+        raspi_service = MockRaspiService()
+
+    server = Server(config, raspi_service, schedule.Scheduler())
     server.start()
     
 

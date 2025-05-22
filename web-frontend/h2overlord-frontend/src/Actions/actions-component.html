@@ -1,0 +1,13 @@
+<card-component title="Immediate Actions">
+    <div au-slot class="actionsContainer">
+        <div class="toggle">
+            <input type="checkbox" class="switch" id="pump-active-toggle" checked.bind="isEnabled">
+            <label for="pump-active-toggle">Enable pump</label>
+        </div>
+        <div class="toggle">
+            <input type="checkbox" class="switch" id="pump-water-toggle" checked.bind="isPumping">
+            <label for="pump-water-toggle">Pump water right now</label>
+        </div>
+        <!-- <button>Reboot Raspberry Pi</button> -->
+    </div>
+</card-component>

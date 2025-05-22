@@ -1,0 +1,5 @@
+{
+  "baseUrl": "/h2overlord",
+  "relayGpioPin": 16,
+  "bme280GpioPin": 0
+}

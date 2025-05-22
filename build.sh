@@ -1,5 +1,7 @@
+echo 'Building h2overlord!'
 echo 'Moving build to build.zip'
 rm -rf build
+rm -rf build.zip
 
 mkdir build
 
@@ -21,3 +23,4 @@ mv h2overlord-python//main.dist build/backend
 cp run.sh build/run.sh
 
 zip -r build.zip build/
+echo 'Finished building h2overlord!'

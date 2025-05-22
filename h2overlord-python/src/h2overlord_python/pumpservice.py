@@ -73,7 +73,7 @@ class PumpService:
 
         dt = dt.add(minutes=duration)
         self.scheduler.every().day.at(dt.to_time_string()).do(self.schedule_pump(False))
-
+        self.dump_state_to_db()
         return self.status()
 
     def toggle_pump_running(self):
@@ -81,12 +81,14 @@ class PumpService:
         if self.pump_state.isEnabled:
             self.raspi_service.toggle_pump_relay()
             self.pump_state.isRunning = not self.pump_state.isRunning
+            self.dump_state_to_db()
 
         return self.status()
 
     def toggle_enable_pump(self):
         self.fetch_state_from_db()
         self.pump_state.isEnabled = not self.pump_state.isEnabled
+        self.dump_state_to_db()
         return self.status()
 
     def validate_time(self, time: str):

@@ -1,11 +1,10 @@
 
-from bottle import route, run, Bottle, request, response
+from bottle import run, Bottle, response
 from schedule import Scheduler
-from tinydb import TinyDB
 
-from h2overlord_python.raspiservice import RaspiService, InterfaceRaspiService
+from h2overlord_python.raspiservice import InterfaceRaspiService
 from h2overlord_python.pumpservice import PumpService
-from src.h2overlord_python.Config.config import Config
+from h2overlord_python.Config.config import Config
 
 class Server: 
     server_router : PumpService

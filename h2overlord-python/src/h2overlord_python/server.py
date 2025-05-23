@@ -9,7 +9,6 @@ from src.h2overlord_python.Config.config import Config
 
 class Server: 
     server_router : PumpService
-    main_server : Bottle = Bottle()
     bottle : Bottle = Bottle()
 
     def __init__(self, config: Config, raspi_service: InterfaceRaspiService, scheduler: Scheduler):
@@ -18,10 +17,9 @@ class Server:
 
 
     def start(self):
-        print(f'Starting the server at base url {self.config.baseUrl}')
+        print(f'Starting the server at h2overlord:8080')
         self.setup_routes()
-        self.main_server.mount(self.config.baseUrl, self.bottle)
-        run(self.main_server, host='localhost', port=8080)
+        run(self.bottle, host='h2overlord', port=8080)
 
     def setup_routes(self):
         self.bottle.route('/status', 'GET', self.server_router.status)
@@ -31,7 +29,7 @@ class Server:
         self.bottle.add_hook('after_request', self.enable_cors)
 
     def enable_cors(self):
-        response.headers['Access-Control-Allow-Origin'] = 'http://localhost:9000'
+        response.headers['Access-Control-Allow-Origin'] = '*'
         response.headers['Access-Control-Allow-Methods'] = 'PUT, GET, POST, DELETE, OPTIONS'
         response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
         

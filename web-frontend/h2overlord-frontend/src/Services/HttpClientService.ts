@@ -12,7 +12,7 @@ export class HttpClientService {
             .withDefaults({ 
                 'mode': 'cors'
             })
-            .withBaseUrl('http://localhost:8080/h2overlord')
+            .withBaseUrl('http://h2overlord:8080')
         })
     }
 

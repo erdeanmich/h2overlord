@@ -16,6 +16,7 @@ dependencies = [
     "bottle (>=0.13.3,<0.14.0)",
     "nuitka (>=2.7.3,<3.0.0)",
     "tinydb (>=4.8.2,<5.0.0)",
+    "pigpio (>=1.78,<2.0)",
 ]
 
 [tool.poetry]

@@ -17,6 +17,7 @@ mv web-frontend/h2overlord-frontend/dist build/web
 echo 'Building the backend'
 cd h2overlord-python
 poetry install 
+poetry lock
 poetry run python -m nuitka --mode=standalone --include-data-files=src/h2overlord_python/Config/config.json=Config/config.json src/h2overlord_python/main.py
 cd ..
 mv h2overlord-python/main.dist build/backend

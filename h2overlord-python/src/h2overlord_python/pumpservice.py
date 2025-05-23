@@ -10,7 +10,7 @@ from tinydb.table import Document
 
 from h2overlord_python.Config.config import Config
 from h2overlord_python.Data.pumpstate import PumpState
-from h2overlord_python.raspiservice import RaspiService, InterfaceRaspiService
+from h2overlord_python.raspiservice import InterfaceRaspiService
 
 
 class PumpService:

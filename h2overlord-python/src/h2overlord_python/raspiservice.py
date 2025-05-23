@@ -2,9 +2,10 @@
 import bme280
 import gpiozero
 import smbus2
+import RPi.GPIO as GPIO
+from gpiozero.pins.rpigpio import RPiGPIOFactory
 from bme280 import compensated_readings
 from gpiozero import OutputDevice
-import RPi.GPIO as GPIO
 from smbus2.smbus2 import SMBus
 from h2overlord_python.Config.config import Config
 
@@ -29,7 +30,8 @@ class RaspiService(InterfaceRaspiService):
     address = 0x76
 
     def __init__(self, config: Config):
-        self.relay = gpiozero.OutputDevice(config.relayGpioPin, active_high=False)
+        factory = RPiGPIOFactory()
+        self.relay = gpiozero.OutputDevice(config.relayGpioPin, active_high=False, pin_factory=factory)
         self.smbus = smbus2.SMBus(1)
         self.bme280_params = bme280.load_calibration_params(self.smbus, self.address)
         

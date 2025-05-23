@@ -286,18 +286,6 @@ tzdata = ">=2020.1"
 test = ["time-machine (>=2.6.0) ; implementation_name != \"pypy\""]
 
 [[package]]
-name = "pigpio"
-version = "1.78"
-description = "Raspberry Pi GPIO module"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "pigpio-1.78-py2.py3-none-any.whl", hash = "sha256:81e46f640c4e6342881fa9bbe290dbcd4fc179619dc6591e57a9d4a084dc49fa"},
-    {file = "pigpio-1.78.tar.gz", hash = "sha256:91efa50e4990649da97408a384782d6ccf58342fc59cdfe21ed7a42911569975"},
-]
-
-[[package]]
 name = "pycparser"
 version = "2.22"
 description = "C parser in Python"
@@ -598,4 +586,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9, <4.0"
-content-hash = "d99caf3037d45f725fb26a14e2a0b7c25333fd483b6d7e7d32c7f6fb85ba07ce"
+content-hash = "72fde1c0b2efa023ce1fc4fb94fbda87c3ee2127c70c957e47b756e2fa2712ac"

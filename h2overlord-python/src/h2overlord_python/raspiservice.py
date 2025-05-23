@@ -4,6 +4,7 @@ import gpiozero
 import smbus2
 from bme280 import compensated_readings
 from gpiozero import OutputDevice
+import RPi.GPIO as GPIO
 from smbus2.smbus2 import SMBus
 from h2overlord_python.Config.config import Config
 

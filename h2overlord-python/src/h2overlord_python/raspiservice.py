@@ -31,7 +31,7 @@ class RaspiService(InterfaceRaspiService):
 
     def __init__(self, config: Config):
         factory = RPiGPIOFactory()
-        self.relay = gpiozero.OutputDevice(config.relayGpioPin, active_high=False, pin_factory=factory)
+        self.relay = gpiozero.OutputDevice(config.relayGpioPin, active_high=True, pin_factory=factory)
         self.smbus = smbus2.SMBus(1)
         self.bme280_params = bme280.load_calibration_params(self.smbus, self.address)
         

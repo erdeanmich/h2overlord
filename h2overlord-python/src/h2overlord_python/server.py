@@ -18,7 +18,7 @@ class Server:
     def start(self):
         print(f'Starting the server at h2overlord:8080')
         self.setup_routes()
-        run(self.bottle, host='h2overlord', port=8080)
+        run(self.bottle, host='0.0.0.0', port=8080)
 
     def setup_routes(self):
         self.bottle.route('/status', 'GET', self.server_router.status)

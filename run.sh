@@ -1,5 +1,5 @@
-backend_dir="backend/"
-frontend_dir="web"
+backend_dir="h2overlord-python/src/h2overlord_python/"
+frontend_dir="web-build/"
 
 
 cleanup() {
@@ -18,12 +18,6 @@ cleanup() {
 trap cleanup INT TERM
 trap cleanup EXIT
 
-
-if [ ! -d "$backend_dir" ] || [ ! -d "$frontend_dir" ] ; then  
-    echo "Not in build directory! Please execute the script from within release package."
-    exit 1
-fi
-
 echo "STARTING THE H2OVERLORD!"
 echo "1. Starting the webserver"
 cd $frontend_dir 
@@ -35,9 +29,8 @@ echo "Started web server at localhost:9000 with PID ${webserver_pid}"
 cd ..
 echo "2. Starting the backend"
 cd $backend_dir
-chmod +x main.bin 
 
-./main.bin &> backend.log &
+poetry run python3 main.py > backend.log &
 backend_pid=$!
 echo "Started the backend at localhost:8080 with PID ${backend_pid}"
 

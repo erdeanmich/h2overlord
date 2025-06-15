@@ -22,6 +22,7 @@ trap cleanup EXIT
 echo "STARTING THE H2OVERLORD!"
 echo "1. Starting the webserver"
 
+cd "$(dirname "$0")"
 current_dir="$(pwd)"
 
 cd $frontend_dir 

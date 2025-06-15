@@ -1,3 +1,4 @@
+#!/bin/bash
 echo 'Building h2overlord!'
 echo 'Moving web to web-build'
 rm -rf web-build

@@ -1,3 +1,4 @@
+#!/bin/bash
 backend_dir="h2overlord-python/src/h2overlord_python/"
 frontend_dir="web-build/"
 

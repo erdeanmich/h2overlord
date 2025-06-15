@@ -21,17 +21,20 @@ trap cleanup EXIT
 
 echo "STARTING THE H2OVERLORD!"
 echo "1. Starting the webserver"
+
+current_dir="$(pwd)"
+
 cd $frontend_dir 
-python3 -m http.server 9000 > frontend.log &
+python3 -m http.server 9000 > $current_dir/frontend.log &
 webserver_pid=$!
 
 echo "Started web server at localhost:9000 with PID ${webserver_pid}"
 
-cd ..
+cd $current_dir
 echo "2. Starting the backend"
 cd $backend_dir
 
-poetry run python3 main.py > backend.log &
+poetry run python3 main.py > $current_dir/backend.log &
 backend_pid=$!
 echo "Started the backend at localhost:8080 with PID ${backend_pid}"
 

@@ -33,6 +33,7 @@ class PumpService:
 
         print(self.pump_state)
         self.scheduler = scheduler
+        self.initialize_scheduler()
 
     def fetch_state_from_db(self):
         db_state = self.db.get(doc_id=1)
@@ -73,13 +74,18 @@ class PumpService:
             self.dump_state_to_db()
             return self.status()
 
-        dt = pendulum.parse(time)
-        self.scheduler.every().day.at(dt.to_time_string()).do(self.schedule_pump(True))
-
-        dt = dt.add(minutes=duration)
-        self.scheduler.every().day.at(dt.to_time_string()).do(self.schedule_pump(False))
+        self.initialize_scheduler()
         self.dump_state_to_db()
         return self.status()
+
+    def initialize_scheduler(self):
+        if self.pump_state.currentSchedule == '' or self.pump_state.currentDuration == 0:
+            return 
+        
+        dt = pendulum.parse(self.pump_state.currentSchedule)
+        self.scheduler.every().day.at(dt.to_time_string()).do(self.schedule_pump(True))
+        dt = dt.add(minutes=self.pump_state.currentDuration)
+        self.scheduler.every().day.at(dt.to_time_string()).do(self.schedule_pump(False))
 
     def toggle_pump_running(self):
         self.fetch_state_from_db()

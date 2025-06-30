@@ -83,9 +83,9 @@ class PumpService:
             return 
         
         dt = pendulum.parse(self.pump_state.currentSchedule)
-        self.scheduler.every().day.at(dt.to_time_string()).do(self.schedule_pump(True))
+        self.scheduler.every().day.at(dt.to_time_string()).do(self.turn_on)
         dt = dt.add(minutes=self.pump_state.currentDuration)
-        self.scheduler.every().day.at(dt.to_time_string()).do(self.schedule_pump(False))
+        self.scheduler.every().day.at(dt.to_time_string()).do(self.turn_off)
 
     def toggle_pump_running(self):
         self.fetch_state_from_db()
@@ -108,6 +108,12 @@ class PumpService:
         
         pattern = re.compile(r"\d\d:\d\d", re.IGNORECASE)
         return pattern.match(time)
+
+    def turn_on(self):
+        self.schedule_pump(True)
+
+    def turn_off(self):
+        self.schedule_pump(False)
 
     def schedule_pump(self, pump_active: bool):
         active = self.pump_state.isEnabled and pump_active

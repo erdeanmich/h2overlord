@@ -1,4 +1,5 @@
 import json
+import logging
 import re
 import threading
 import time
@@ -56,6 +57,7 @@ def run_continuously(interval=1):
         @classmethod
         def run(cls):
             while not cease_continuous_run.is_set():
+                logging.getLogger().debug('Run scheduler tick!')
                 schedule.run_pending()
                 time.sleep(interval)
 
@@ -64,9 +66,10 @@ def run_continuously(interval=1):
     return cease_continuous_run
 
 if __name__ == '__main__':
-    print('Starting the H2Overlord backend!')
+    logging.basicConfig(filename='debug.log', level=logging.DEBUG)
+    logging.getLogger().debug('Starting the H2Overlord backend!')
     config = Config(**json.loads(open('./Config/config.json').read()))
-    print(config)
+    logging.getLogger().debug(onfig)
     background_task = run_continuously(60)
 
     if is_raspberry_pi():

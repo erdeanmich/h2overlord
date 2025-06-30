@@ -25,7 +25,6 @@ class PumpService:
 
     def __init__(self, config: Config, raspi_service: InterfaceRaspiService, scheduler : Scheduler):
         self.logger = logging.getLogger(__name__)
-        logging.basicConfig(filename='debug.log', level=logging.DEBUG)
         self.config = config
         self.raspi_service = raspi_service
         self.pump_state = PumpState(

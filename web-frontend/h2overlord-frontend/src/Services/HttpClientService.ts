@@ -44,6 +44,15 @@ export class HttpClientService {
         })
         .catch(error => console.error(error))
     }
+
+    public pushNewSchedule(time: string, duration: number) {
+        this.httpClient.post('/schedule', JSON.stringify({ time: time, duration: duration}))
+            .then(response => response.json())
+            .then((statusData: StatusData) => {
+                this.ea.publish('status', statusData)
+            })
+            .catch(error => console.error(error))
+    }
 }
 
 

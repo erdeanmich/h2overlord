@@ -68,6 +68,11 @@ class PumpService:
         self.pump_state.currentDuration = duration
 
         schedule.clear()
+        
+        if time == '' or duration == 0:
+            self.dump_state_to_db()
+            return self.status()
+
         dt = pendulum.parse(time)
         self.scheduler.every().day.at(dt.to_time_string()).do(self.schedule_pump(True))
 
@@ -92,6 +97,9 @@ class PumpService:
         return self.status()
 
     def validate_time(self, time: str):
+        if time == '':
+            return True
+        
         pattern = re.compile(r"\d\d:\d\d", re.IGNORECASE)
         return pattern.match(time)
 

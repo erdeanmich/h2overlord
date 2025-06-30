@@ -32,6 +32,14 @@ export class ScheduleComponent {
         }
     }
 
+    public onSubmit() {
+        this.httpClientService.pushNewSchedule(this.newSchedule, this.newDuration)
+    }
+
+    public onClear() {
+        this.httpClientService.pushNewSchedule('', 0)
+    }
+
     public newScheduleChanged(newVal: string, oldVal: string) {
        let isValid = this.isValidTime(newVal) && this.isValidDuration(String(this.newDuration));
         document.getElementById('button-configure')["disabled"] = !isValid;

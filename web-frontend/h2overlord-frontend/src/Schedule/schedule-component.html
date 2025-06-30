@@ -5,7 +5,8 @@
     <div class="configure-container">
         <input type="time" value.bind="newSchedule"/>
         <input type="number" value.bind="newDuration">
-        <button id="button-configure" disabled>Configure new schedule!</button>
+        <button id="button-configure" disabled click.trigger="onSubmit()">Configure new schedule!</button>
+        <button id="button-clear" click.trigger="onClear()">Clear schedule</button>
         <div class="readable-schedule">
             ${getFormattedSchedule(newSchedule, newDuration)}
         </div>

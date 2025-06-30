@@ -1,3 +1,4 @@
+from gc import enable
 
 from bottle import run, Bottle, response
 from schedule import Scheduler
@@ -25,6 +26,7 @@ class Server:
         self.bottle.route('/schedule', 'POST', self.server_router.schedule)
         self.bottle.route('/action/pump-running', 'POST', self.server_router.toggle_pump_running)
         self.bottle.route('/action/pump-enable', 'POST', self.server_router.toggle_enable_pump)
+        self.bottle.route('/<:re:.*>', 'OPTIONS', self.enable_cors)
         self.bottle.add_hook('after_request', self.enable_cors)
 
     def enable_cors(self):

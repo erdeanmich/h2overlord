@@ -8,7 +8,7 @@ export class ScheduleComponent {
     public schedule: string = '18:00';
     public duration: number = 20;
     @bindable({ mode: BindingMode.twoWay}) public newSchedule: string = '';
-    @bindable({ mode: BindingMode.twoWay}) public newDuration: number = 0;
+    @bindable({ mode: BindingMode.twoWay}) public newDuration: string = '0';
 
     constructor(private httpClientService: IHttpClientService, private ea : IEventAggregator) {
         ea.subscribe('status', (statusData: StatusData) => this.OnStatusReceived(statusData))
@@ -33,7 +33,7 @@ export class ScheduleComponent {
     }
 
     public onSubmit() {
-        this.httpClientService.pushNewSchedule(this.newSchedule, this.newDuration)
+        this.httpClientService.pushNewSchedule(this.newSchedule, parseInt(this.newDuration))
     }
 
     public onClear() {

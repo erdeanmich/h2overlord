@@ -1,5 +1,7 @@
 import json
 import re
+import logging
+from logging import Logger
 
 import pendulum
 import schedule
@@ -19,19 +21,25 @@ class PumpService:
     pump_state: PumpState
     scheduler: Scheduler
     db: TinyDB = TinyDB('state.json')
+    logger : Logger
 
     def __init__(self, config: Config, raspi_service: InterfaceRaspiService, scheduler : Scheduler):
+        self.logger = logging.getLogger(__name__)
+        logging.basicConfig(filename='debug.log', level=logging.DEBUG)
         self.config = config
         self.raspi_service = raspi_service
         self.pump_state = PumpState(
             False, False, self.raspi_service.get_temperature(), self.raspi_service.get_humidity(), '', 0
         )
+
         if len(self.db.all()) == 0:
             self.dump_state_to_db()
         else:
             self.fetch_state_from_db()
 
-        print(self.pump_state)
+        self.logger.debug('INITIALIZE OF PUMP SERVICE')
+        self.logger.debug(self.pump_state)
+
         self.scheduler = scheduler
         self.initialize_scheduler()
 
@@ -54,6 +62,7 @@ class PumpService:
         self.pump_state.temperature = self.raspi_service.get_temperature()
         self.pump_state.humidity = self.raspi_service.get_humidity()
         self.dump_state_to_db()
+        self.logger.debug(f'Number of jobs right now: {self.scheduler.get_jobs()}')
         return json.dumps(self.pump_state.__dict__)
 
     def schedule(self):
@@ -83,9 +92,10 @@ class PumpService:
             return 
         
         dt = pendulum.parse(self.pump_state.currentSchedule)
-        self.scheduler.every().day.at(dt.to_time_string()).do(self.turn_on)
+        self.logger.debug(f'SETTING SCHEDULE TO {dt.to_time_string()}')
+        self.scheduler.every().day.at(dt.to_time_string(), "Europe/Berlin").do(self.turn_on)
         dt = dt.add(minutes=self.pump_state.currentDuration)
-        self.scheduler.every().day.at(dt.to_time_string()).do(self.turn_off)
+        self.scheduler.every().day.at(dt.to_time_string(), "Europe/Berlin").do(self.turn_off)
 
     def toggle_pump_running(self):
         self.fetch_state_from_db()
@@ -110,9 +120,11 @@ class PumpService:
         return pattern.match(time)
 
     def turn_on(self):
+        self.logger.debug('TURN ON')
         self.schedule_pump(True)
 
     def turn_off(self):
+        self.logger.debug('TURN OFF')
         self.schedule_pump(False)
 
     def schedule_pump(self, pump_active: bool):

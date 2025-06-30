@@ -113,3 +113,4 @@ class PumpService:
         active = self.pump_state.isEnabled and pump_active
         self.pump_state.isRunning = active
         self.raspi_service.set_pump_relay(active)
+        self.dump_state_to_db()

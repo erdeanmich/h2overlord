@@ -24,12 +24,14 @@ export class StatusBoard {
     }
 
     private formatHumidity(): string {
-        let text = this.humidity * 100 + "%";
+        let text = new Intl.NumberFormat('de-DE', {style: 'percent' })
+        .format(this.humidity);
         return "Humidity: " + text;
     }
 
     private formatTemperature(): string {
-        let text = this.temperature + "°C";
+        let text = new Intl.NumberFormat('de-DE', {style: 'unit', unit: 'celsius' })
+        .format(this.temperature);
         return "Temperature: " + text;
     }
 

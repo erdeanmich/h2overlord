@@ -76,7 +76,7 @@ class PumpService:
         self.pump_state.currentSchedule = time
         self.pump_state.currentDuration = duration
 
-        schedule.clear()
+        self.scheduler.clear()
         
         if time == '' or duration == 0:
             self.dump_state_to_db()

@@ -6,6 +6,7 @@ import time
 from pathlib import Path
 
 import schedule
+from schedule import Scheduler
 
 from h2overlord_python.Config.config import Config
 from h2overlord_python.raspiservice import RaspiService, MockRaspiService
@@ -40,7 +41,7 @@ def is_raspberry_pi() -> bool:
     # If none of the above matched we assume we are *not* on a Pi
     return False
 
-def run_continuously(interval=1):
+def run_continuously(scheduler: Scheduler, interval=1):
     """Continuously run, while executing pending jobs at each
     elapsed time interval.
     @return cease_continuous_run: threading. Event which can
@@ -58,7 +59,7 @@ def run_continuously(interval=1):
         def run(cls):
             while not cease_continuous_run.is_set():
                 logging.getLogger().debug('Run scheduler tick!')
-                schedule.run_pending()
+                scheduler.run_pending()
                 time.sleep(interval)
 
     continuous_thread = ScheduleThread()
@@ -70,14 +71,15 @@ if __name__ == '__main__':
     logging.getLogger().debug('Starting the H2Overlord backend!')
     config = Config(**json.loads(open('./Config/config.json').read()))
     logging.getLogger().debug(config)
-    background_task = run_continuously(60)
+    scheduler = schedule.Scheduler()
+    background_task = run_continuously(scheduler,30)
 
     if is_raspberry_pi():
         raspi_service = RaspiService(config)
     else:
         raspi_service = MockRaspiService()
 
-    server = Server(config, raspi_service, schedule.Scheduler())
+    server = Server(config, raspi_service, scheduler)
     server.start()
     
 

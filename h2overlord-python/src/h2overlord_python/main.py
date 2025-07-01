@@ -69,7 +69,7 @@ if __name__ == '__main__':
     logging.basicConfig(filename='debug.log', level=logging.DEBUG)
     logging.getLogger().debug('Starting the H2Overlord backend!')
     config = Config(**json.loads(open('./Config/config.json').read()))
-    logging.getLogger().debug(onfig)
+    logging.getLogger().debug(config)
     background_task = run_continuously(60)
 
     if is_raspberry_pi():

@@ -3,12 +3,12 @@
     display: flex;
     align-items: center;
     color: dimgray;
-    margin-left: 5px;
+    margin-left: 0.5em;
 
     ul {
         list-style: none;
         li {
-            padding: 5px;
+            padding: 2px;
         }
     }
 }
@@ -67,7 +67,7 @@
     border-width: thin;
     border-radius: 10px;
     border-color: black;
-    padding: 10px;
+    padding: 0.5em;
 }
 
 @keyframes anim {

@@ -25,7 +25,7 @@ export class StatusBoard {
 
     private formatHumidity(): string {
         let text = new Intl.NumberFormat('de-DE', {style: 'percent' })
-        .format(this.humidity);
+        .format(this.humidity / 100);
         return "Humidity: " + text;
     }
 
